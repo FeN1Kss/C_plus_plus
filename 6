@@ -1,63 +1,104 @@
+#include <ctime>
+#include <iomanip>
 #include <iostream>
 
-using namespace std;
 
-void output(int N, int** matrix)
-{
-    cout << "---------------------------------------------------------------\n";
-    int count = 0;
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++)
-        {
-            if (matrix[i][j] < 10)
-                cout << " ";
-            cout << matrix[i][j] << "| ";
-            count += 1;
-        }
-        if (count == N) { cout << "\n"; count = 0; }
-    }
+
+int read_int(const char* prompt = "") {
+    std::cout << prompt;
+
+    int value = 0;
+    std::cin >> value;
+    std::cout << std::endl;
+    return value;
 }
-int** generator_matrix(int N, int** matrix)
-{
-    for (int i = 0; i < N; i++)
-        matrix[i] = new int[N];
 
-    for (int i = 0; i < N; i++)
-        for (int j = 0; j < N; j++)
-        {
-            matrix[i][j] = rand() % 50;
+void print_matrix(const int* const* matrix, std::size_t dimension, std::streamsize cell_width = 2) {
+    for (int row = 0; row < dimension; row++) {
+        std::cout << "|";
+        for (int col = 0; col < dimension; col++) {
+            std::cout << std::setw(cell_width) << matrix[row][col] << "|";
         }
+        std::cout << '\n';
+    }
+
+    std::cout << std::endl;
+}
+
+int** generate_matrix(std::size_t dimension) {
+    int** matrix = new int* [dimension];
+    for (int row = 0; row < dimension; row++) {
+        matrix[row] = new int[dimension];
+    }
+
+    static const int MaxValue = 50;
+    for (int row = 0; row < dimension; row++) {
+        for (int col = 0; col < dimension; col++) {
+            matrix[row][col] = rand() % MaxValue;
+        }
+    }
+
     return matrix;
 }
-int** cocktail(int N, int** matrix)
-{
-    int tmp;
-    for (int p = 0; p < N; p++) 
+
+void delete_matrix(int** matrix, std::size_t dimension) {
+    for (int row = 0; row < dimension; row++) {
+        delete[] matrix[row];
+    }
+    delete[] matrix;
+}
+
+
+int** sort_matrix_columns(int** matrix, std::size_t dimension) {
+    const int time = clock();
+    bool swapped = 1;
+    while (swapped)
     {
-        for (int j = 0; j < N-1; j++)
-            for (int i = 0; i < N-1; i++) 
-            {
-            if (matrix[j][i] > matrix[j+1][i])
-            {
-                tmp = matrix[j][i];
-                matrix[j][i] = matrix[j+1][i];
-                matrix[j+1][i] = tmp;
+        swapped = 0;
+        for (int p = 0; p < dimension; p++) {
+            for (int col = 0; col < dimension; col++) {
+                for (int row = 0; row < dimension - 1; row++) {
+                    int& first = matrix[row][col];
+                    int& second = matrix[row + 1][col];
+                    if (first > second) {
+                        std::swap(first, second);
+                        swapped = 1;
+                    }
+                }
             }
         }
+        if (swapped = 0) break;
+        swapped = 0;
+        for (int p = dimension; p > 0; p--) {
+            for (int col = dimension; col > 0; col--) {
+                for (int row = dimension-2; row > 0; row--) {
+                    int& first = matrix[row][col];
+                    int& second = matrix[row + 1][col];
+                    if (first > second) {
+                        std::swap(first, second);
+                        swapped = 1;
+                    }
+                }
+            }
+        }
+
     }
+    std::cout <<"Time = " << time<<"\n";
     return matrix;
 }
 
-int main()
-{
-    int N;
-    cin >> N;
-    int** matrix = new int* [N];
-    generator_matrix(N, matrix);
-    output(N, matrix);
-    cocktail(N, matrix);
-    output(N, matrix);
-}
 
+
+int main() {
+    const std::size_t dimension = read_int("enter matrix dimension: ");
+    int** matrix = generate_matrix(dimension);
+    print_matrix(matrix, dimension);
+
+    sort_matrix_columns(matrix, dimension);
+    print_matrix(matrix, dimension);
+
+    delete_matrix(matrix, dimension);
+    return 0;
+}
 
 
