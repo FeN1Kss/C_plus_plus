@@ -1,4 +1,4 @@
-#include <ctime>
+#include <chrono>
 #include <iomanip>
 #include <iostream>
 
@@ -50,40 +50,37 @@ void delete_matrix(int** matrix, std::size_t dimension) {
 
 
 int** sort_matrix_columns(int** matrix, std::size_t dimension) {
-    const int time = clock();
-    bool swapped = 1;
+    auto start = std::chrono::high_resolution_clock::now();
+    bool swapped = true;
     while (swapped)
     {
-        swapped = 0;
-        for (int p = 0; p < dimension; p++) {
-            for (int col = 0; col < dimension; col++) {
-                for (int row = 0; row < dimension - 1; row++) {
-                    int& first = matrix[row][col];
-                    int& second = matrix[row + 1][col];
-                    if (first > second) {
-                        std::swap(first, second);
-                        swapped = 1;
-                    }
+        swapped = false;
+        for (int p = 0; p < dimension; p++) 
+        {
+            for (int col = 0; col < dimension-1; col++) 
+            {
+                int& first = matrix[col][p];
+                int& second = matrix[col + 1][p];
+                if (first > second) {
+                    std::swap(first, second);
+                    swapped = true;
+                }
+            }
+            for (int col = dimension-2; col>0; col--)
+            {
+                int& first = matrix[col][p];
+                int& second = matrix[col + 1][p];
+                if (first > second) {
+                    std::swap(first, second);
+                    swapped = true;
                 }
             }
         }
-        if (swapped = 0) break;
-        swapped = 0;
-        for (int p = dimension; p > 0; p--) {
-            for (int col = dimension; col > 0; col--) {
-                for (int row = dimension-2; row > 0; row--) {
-                    int& first = matrix[row][col];
-                    int& second = matrix[row + 1][col];
-                    if (first > second) {
-                        std::swap(first, second);
-                        swapped = 1;
-                    }
-                }
-            }
-        }
-
+        
     }
-    std::cout <<"Time = " << time<<"\n";
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> time = end - start;
+    std::cout << "\nTime = " << time.count()<<"\n";
     return matrix;
 }
 
@@ -100,5 +97,4 @@ int main() {
     delete_matrix(matrix, dimension);
     return 0;
 }
-
 
