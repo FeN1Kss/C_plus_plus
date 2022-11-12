@@ -1,0 +1,54 @@
+#include <iostream>
+using namespace ::std;
+
+int* switc(int length, int *array)
+{
+    int count = 0;
+    for (int i = 0; i < length; i++)
+    {
+        if (array[i] == 0)
+        {
+            for (i; i < length; i++)
+            {
+                array[i] = array[i + 1];
+            }
+            count += 1;
+            i = 0;
+        }
+    }
+    for (int i = (length - count); i < length; i++)
+        array[i] = 0;
+    return array;
+}
+
+int* input(int length, int *array,int x)
+{
+    for (int i = 0; i < length; i++)
+    {
+        array[i] = rand() % x;
+    }
+    return array;
+}
+
+void output(int length, int array[])
+{
+    cout << "[ ";
+    for (int i = 0; i < length; i++)
+    {
+        cout << array[i] << ","<<" ";
+    }
+    cout << "]\n";
+
+}
+
+int main()
+{
+    int length,x;
+    cin >> length>>x;
+    int* array = new int[length];
+    input(length, array,x);
+    output(length, array);
+    switc(length, array);
+    output(length, array);
+}
+
