@@ -1,21 +1,21 @@
 #include <iostream>
 #include <fstream>
-void input(int length)
+#include <string>
+void write_first_file(int length,std::string F1)
 {
 	int number_1;
-	
-	std::ofstream fout("F1.bin", std::ios_base::binary);
-	for (int i = 0; i < length;i++)
+	std::ofstream fout(F1, std::ios_base::binary);
+	for (int i = 0; i < length; i++)
 	{
 		std::cin >> number_1;
 		fout.write((char*)&number_1, sizeof(int));
 	}
 	fout.close();
 }
-int* read(int length) 
+int* read_first_file(int length, std::string F1)
 {
 	int number_2;
-	std::ifstream fout("F1.bin", std::ios_base::binary);
+	std::ifstream fout(F1, std::ios_base::binary);
 	int* mass = new int[length];
 	for (int i = 0; i < length; i++)
 	{
@@ -25,23 +25,23 @@ int* read(int length)
 	fout.close();
 	return mass;
 }
-void write(int* mass,int length)
+void write_second_file(int* mass, int length, std::string F2)
 {
 	bool count = true;
-	std::ofstream fout("F2.bin", std::ios_base::binary);
+	std::ofstream fout(F2, std::ios_base::binary);
 
-	for (int j = 0; j < length;) 
+	for (int j = 0; j < length;)
 	{
 		for (int i = 0; i < length; i++)
 		{
-			
+
 			if (count == true)
 			{
 				if (mass[i] > 0)
 				{
 					fout.write((char*)&mass[i], sizeof(int));
 					count = false;
-					
+
 					mass[i] = 0;
 
 					j += 1;
@@ -53,7 +53,7 @@ void write(int* mass,int length)
 				{
 					fout.write((char*)&mass[i], sizeof(int));
 					count = true;
-					
+
 					mass[i] = 0;
 					j += 1;
 				}
@@ -63,25 +63,40 @@ void write(int* mass,int length)
 	fout.close();
 
 }
-void read_F2(int length)
+void output(int length, std::string F2)
 {
 	int number;
-	std::ifstream fout("F2.bin", std::ios_base::binary);
+	std::ifstream fout(F2, std::ios_base::binary);
+	std::cout << "| ";
 	for (int i = 0; i < length; i++)
 	{
 		fout.read((char*)&number, sizeof(int));
 		std::cout << number << " ";
 	}
 	fout.close();
+	std::cout << "|\n";
+
+}
+void process()
+{
+	std::string F1, F2;
+	int length;
+	std::cout << "Enter the name of the first file: ";
+	std::cin >> F1;
+	std::cout << "Enter the name of the second file: ";
+	std::cin >> F2;
+	std::cout << "Enter amount of number: ";
+	std::cin >> length;
+	write_first_file(length,F1);
+	write_second_file(read_first_file(length,F1), length,F2);
+	std::cout << "File data " << F1<<":"<<std::endl;
+	output(length,F1);
+	std::cout << "File data " << F2 <<":"<< std::endl;
+	output(length, F2);
 
 }
 
 int main()
 {
-	int length;
-	std::cin >> length;
-	input(length);
-	write(read(length),length);
-	read_F2(length);
-	
+	process();
 }
