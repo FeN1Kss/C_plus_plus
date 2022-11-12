@@ -1,1 +1,87 @@
+#include <iomanip>
+#include <iostream>
+#include <conio.h>
+
+
+struct object
+{
+	char name_object[10];
+	char name_firm[10];
+	char region[10];
+	int price;
+	int time;
+	int amount;
+	
+};
+void output(object objects[], const int length)
+{
+		std::cout << "All tovars: " << "\n";
+		std::cout << "  Name:          Firm:          Region:        Price:    Time:     Amount:   \n  ";
+
+		
+		for (int i = 0; i < length; i++)
+		{
+			std::cout << std::setw(15) << std::left << objects[i].name_object;
+			std::cout << std::setw(15) << std::left << objects[i].name_firm;
+			std::cout << std::setw(15) << std::left << objects[i].region;
+			std::cout << std::setw(10) << std::left << objects[i].price;
+			std::cout << std::setw(10) << std::left << objects[i].time;
+			std::cout << std::setw(10) << std::left << objects[i].amount << " " << std::setw(3)<<"\n";
+		}
+
+}
+char input()
+{
+	char input_region ;
+	std::cout << "Enter Region: ";
+	std::cin >> input_region;
+	return input_region;
+	
+}
+
+int find_max_amount(object objects[], const int length, char* input_region)
+{
+	int max_amount = 0;
+	for (int i = 0; i < length; i++)
+	{
+		if (input_region == objects[i].region)
+		{
+			if (objects[i].price > max_amount)
+			{
+				max_amount = objects[i].price;
+			}
+		}
+	}
+	for (int i = 0; i < length; i++)
+	{
+		if (input_region == objects[i].region)
+		{
+			if (objects[i].price == max_amount)
+			{
+				std::cout << std::setw(15) << std::left << objects[i].name_object;
+				std::cout << std::setw(15) << std::left << objects[i].name_firm;
+				std::cout << std::setw(15) << std::left << objects[i].region;
+				std::cout << std::setw(10) << std::left << objects[i].price;
+				std::cout << std::setw(10) << std::left << objects[i].time;
+				std::cout << std::setw(10) << std::left << objects[i].amount << " " << std::setw(3) << "\n";;
+			}
+		}
+	}
+
+}
+
+int main()
+{
+	const int length = 7;
+	object objects[length] = { {"iPhone","Apple","Kyiv",1000,20,600},
+						 {"headphone","Razer","Kherson",100,5,100},
+						 {"macbook","Apple","Kyiv",3000,5,200},
+						 {"processor","AMD","Lviv",600,5,500},
+						 {"processor","Intel","Lviv",800,9,500},
+						 {"headphone","bloody","Kherson",300,6,180},
+						 {"mouse","Razer","Kherson",100,15,700} };
+
+	output(objects, length);
+	find_max_amount(objects, length,input());
+}
 
