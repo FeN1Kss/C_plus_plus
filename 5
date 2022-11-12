@@ -1,0 +1,68 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+bool is_vowel(char letter) {
+    static const char* VOWELS = "aeiouy";
+    static const size_t VOWELS_COUNT = strlen(VOWELS);
+
+    for (int i = 0; i < VOWELS_COUNT; i++) {
+        if (tolower(letter) == VOWELS[i]) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void print_words_end_with_vowels(const char* text) 
+{
+    int counter = 0;
+    for (int i = 0; i < strlen(text); i++) {
+        if (text[i] == ' ') 
+        {
+                if (is_vowel(text[i - 1])) 
+                {
+                    for (int c = i - counter; c < i; c++) 
+                    {
+                        cout << text[c];
+                    }
+                    cout << endl;
+                }
+            counter = 0;
+        }
+        counter++;
+    }
+}
+
+void print_words_end_with_consonants(const char* text) {
+    int counter = 0;
+    for (int i = 0; i < strlen(text); i++) {
+        if (text[i] == ' ') 
+        {
+                if (is_vowel(text[i - 1])==false) 
+                {
+                    for (int c = i - counter; c < i; c++)
+                    {
+                        cout << text[c];
+                    }
+                    cout << endl;
+                }
+                counter = 0;
+        }
+        counter++;
+    }
+}
+
+void process_text(const char* text) {
+    print_words_end_with_consonants(text);
+    print_words_end_with_vowels(text);
+}
+
+int main() {
+    static const size_t MAX_TEXT_LENGTH = 255;
+
+    char text[MAX_TEXT_LENGTH + 1] = { '\0' };
+    cin.getline(text, MAX_TEXT_LENGTH, '\n');
+    process_text(text);
+}
