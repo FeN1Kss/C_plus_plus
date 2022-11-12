@@ -61,7 +61,7 @@ void write_second_file(int* mass, int length, std::string F2)
 		}
 	}
 	fout.close();
-
+	delete [] mass;
 }
 void output(int length, std::string F2)
 {
@@ -77,6 +77,7 @@ void output(int length, std::string F2)
 	std::cout << "|\n";
 
 }
+
 void process()
 {
 	std::string F1, F2;
