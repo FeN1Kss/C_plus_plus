@@ -30,33 +30,36 @@ void output(object objects[], const int length)
 		}
 
 }
-char input()
+char* input(object objects[], const int length)
 {
-	char input_region ;
-	std::cout << "Enter Region: ";
+	bool y = false;
+	char input_region[10];
+	std::cout << "\nEnter Region: ";
 	std::cin >> input_region;
 	return input_region;
-	
 }
 
-int find_max_amount(object objects[], const int length, char* input_region)
+void find_max_amount(object objects[], const int length, char* input_region)
 {
 	int max_amount = 0;
+	char count;
+	std::cout << "  Name:          Firm:          Region:        Price:    Time:     Amount:   \n  ";
 	for (int i = 0; i < length; i++)
 	{
-		if (input_region == objects[i].region)
+
+		if (std::strcmp(input_region ,objects[i].region)==0)
 		{
-			if (objects[i].price > max_amount)
+			if (objects[i].amount > max_amount)
 			{
-				max_amount = objects[i].price;
+				max_amount = objects[i].amount;
 			}
 		}
 	}
 	for (int i = 0; i < length; i++)
 	{
-		if (input_region == objects[i].region)
+		if (std::strcmp(input_region, objects[i].region) == 0)
 		{
-			if (objects[i].price == max_amount)
+			if (objects[i].amount == max_amount)
 			{
 				std::cout << std::setw(15) << std::left << objects[i].name_object;
 				std::cout << std::setw(15) << std::left << objects[i].name_firm;
@@ -82,6 +85,5 @@ int main()
 						 {"mouse","Razer","Kherson",100,15,700} };
 
 	output(objects, length);
-	find_max_amount(objects, length,input());
+	find_max_amount(objects, length,input(objects, length));
 }
-
