@@ -31,16 +31,13 @@ void push(Element** head, int data)
 void zamena(Element*& head)
 {
     Element* ptr = head;
-    Element* end = head;
-    Element* x = head;
-    while (ptr)
+    int data = head->data;
+    while (ptr->next)
     {
-        std::cout << ptr->data << " -> ";
         ptr = ptr->next;
     }
-    x = ptr;
-    ptr = end;
-
+    head->data = ptr->data;
+    ptr->data = data;
 }
 
 void user()
