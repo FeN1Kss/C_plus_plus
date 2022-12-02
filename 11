@@ -1,0 +1,104 @@
+#include <iostream>
+
+
+struct stack
+{
+	int p;
+	stack* l;
+};
+
+void getstack(stack* stack_1)
+{
+	while (stack_1->l != NULL)
+	{
+		std::cout << stack_1->p << " ";
+		stack_1 = stack_1->l;
+	}
+}
+
+void push(stack*& stack_1, int p)
+{
+	stack* data = new stack;
+	data->p = p;
+	data->l = stack_1;
+	stack_1 = data;
+}
+
+void makeStack(stack*& stack_1, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		int data = rand() % 101 + (-50);
+		push(stack_1, data);
+	}
+}
+
+void change_stack(stack*& stack_1, stack*& stack_2, int*numbers, int k)
+{
+	int count = 0;
+	for(int i = 0; i < k; i++)
+	{
+		numbers[i] = stack_1->p;
+		count += stack_1->p;
+		stack_1 = stack_1->l;
+	}
+	
+	for (int i = 0; i < k; i++)
+	{
+		if(numbers[i]>float(count)/float(k))
+		{
+			push(stack_2, numbers[i]);
+		}
+	}
+	
+	std::cout << std::endl;
+}
+
+int pop(stack*& stack_1)
+{
+	int data = stack_1->p;
+	stack* poss = stack_1;
+	stack_1 = stack_1->l;
+	delete poss;
+	return data;
+}
+
+void erase(stack*& stack_1)
+{
+	while (stack_1->l != NULL)
+		pop(stack_1);
+}
+
+
+void user()
+{
+	int k;
+	std::cout << "Print number of elements in stack: ";
+	std::cin >> k;
+
+	stack* stack1 = new stack;
+	stack1->l = NULL;
+	stack* stack2 = new stack;
+	stack2->l = NULL;
+	int* numbers = new int[k];
+
+	makeStack(stack1, k);
+	std::cout << "First stack: ";
+	getstack(stack1);
+	std::cout << "\n";
+	change_stack(stack1, stack2,numbers,k);
+	std::cout << "Second stack: ";
+	getstack(stack2);
+
+	erase(stack1);
+	erase(stack2);
+	delete stack1;
+	delete stack2;
+	delete[] numbers;
+}
+
+int main()
+{
+	user;
+}
+
