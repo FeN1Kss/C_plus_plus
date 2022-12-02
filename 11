@@ -7,7 +7,7 @@ struct stack
 	stack* l;
 };
 
-void getstack(stack* stack_1)
+void get_stack(stack* stack_1)
 {
 	while (stack_1->l != NULL)
 	{
@@ -24,7 +24,7 @@ void push(stack*& stack_1, int p)
 	stack_1 = data;
 }
 
-void makeStack(stack*& stack_1, int n)
+void make_stack(stack*& stack_1, int n)
 {
 	for (int i = 0; i < n; i++)
 	{
@@ -33,24 +33,24 @@ void makeStack(stack*& stack_1, int n)
 	}
 }
 
-void change_stack(stack*& stack_1, stack*& stack_2, int*numbers, int k)
+void change_stack(stack*& stack_1, stack*& stack_2, int* numbers, int k)
 {
 	int count = 0;
-	for(int i = 0; i < k; i++)
+	for (int i = 0; i < k; i++)
 	{
 		numbers[i] = stack_1->p;
 		count += stack_1->p;
 		stack_1 = stack_1->l;
 	}
-	
+
 	for (int i = 0; i < k; i++)
 	{
-		if(numbers[i]>float(count)/float(k))
+		if (numbers[i] > float(count) / float(k))
 		{
 			push(stack_2, numbers[i]);
 		}
 	}
-	
+
 	std::cout << std::endl;
 }
 
@@ -82,13 +82,13 @@ void user()
 	stack2->l = NULL;
 	int* numbers = new int[k];
 
-	makeStack(stack1, k);
+	make_stack(stack1, k);
 	std::cout << "First stack: ";
-	getstack(stack1);
+	get_stack(stack1);
 	std::cout << "\n";
-	change_stack(stack1, stack2,numbers,k);
+	change_stack(stack1, stack2, numbers, k);
 	std::cout << "Second stack: ";
-	getstack(stack2);
+	get_stack(stack2);
 
 	erase(stack1);
 	erase(stack2);
@@ -101,4 +101,3 @@ int main()
 {
 	user;
 }
-
