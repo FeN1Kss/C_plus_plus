@@ -1,0 +1,120 @@
+#include <iostream>
+struct Branch
+{
+    int Data;
+    Branch* LeftBranch;
+    Branch* RightBranch;
+};
+void print_tree(Branch* aBranch,int tabs)
+{
+
+    if (!aBranch) return;
+    tabs+=5;
+    print_tree(aBranch->LeftBranch,tabs);
+    for (int i = 0; i < tabs; i++) std::cout << " ";
+    std::cout << aBranch->Data << std::endl;
+    print_tree(aBranch->RightBranch,tabs);
+    tabs -= 5;
+    return;
+}
+void add_elem_from_tree(int aData, Branch*& aBranch)
+{
+    if (!aBranch)
+    {
+        aBranch = new Branch;
+        aBranch->Data = aData;
+        aBranch->LeftBranch = NULL;
+        aBranch->RightBranch = NULL;
+        return;
+    }
+    else
+    {
+        if (aData < aBranch->Data)
+        {
+            add_elem_from_tree(aData, aBranch->LeftBranch);
+        }
+        else if (aData > aBranch->Data)
+        {
+            add_elem_from_tree(aData, aBranch->RightBranch);
+        }
+    }
+}
+void is_tree_empty(Branch*& aBranch)
+{
+    if (!aBranch)
+    {
+        std::cout << "The tree is empty" << std::endl;
+    }
+    else
+    {
+        std::cout << "The tree is not empty" << std::endl;
+    }
+}
+int search_tree_keys_min(Branch*& aBranch)
+{
+    if (aBranch->LeftBranch != NULL) {
+        return search_tree_keys_min(aBranch->LeftBranch);
+    }
+    else {
+        return aBranch->Data;
+    }
+}
+int search_tree_keys_max(Branch*& aBranch)
+{
+    if (aBranch->RightBranch != NULL) {
+        return search_tree_keys_max(aBranch->RightBranch);
+    }
+    else {
+        return aBranch->Data;
+    }
+}
+int switch_tree_keys_max(Branch*& aBranch,int max, int min)
+{
+    if (aBranch->Data == max)
+    {
+        aBranch->Data = min; 
+        return 0;
+    }
+    switch_tree_keys_max(aBranch->RightBranch, max, min);
+}
+int switch_tree_keys_min(Branch*& aBranch, int max, int min)
+{
+    if (aBranch->Data == min)
+    {
+        aBranch->Data = max; 
+        return 0;
+    }
+    switch_tree_keys_min(aBranch->LeftBranch, max, min);
+}
+void delete_tree(Branch* aBranch)
+{
+    if (!aBranch) return;
+    delete_tree(aBranch->LeftBranch);
+    delete_tree(aBranch->RightBranch);
+}
+void input_user()
+{
+    int tabs = 0;
+    int amount, number;
+    Branch* tree = 0;
+    std::cout << "Input amount: ";
+    std::cin >> amount;
+    for (int i = 0; i < amount;i++)
+    {
+        std::cin >> number;
+        add_elem_from_tree(number,tree);
+    }
+    is_tree_empty(tree);
+    print_tree(tree, tabs);
+    int min = search_tree_keys_min(tree);
+    int max = search_tree_keys_max(tree);
+    switch_tree_keys_max(tree, max, min);
+    switch_tree_keys_min(tree, max, min);
+    std::cout << "-----------------\n";
+    print_tree(tree, tabs);
+    delete_tree(tree);
+}
+int main()
+{
+    input_user();
+}
