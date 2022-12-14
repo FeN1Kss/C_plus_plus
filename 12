@@ -1,120 +1,122 @@
 #include <iostream>
-struct Branch
+struct Node
 {
-    int Data;
-    Branch* LeftBranch;
-    Branch* RightBranch;
+    int key_value;
+    Node* left;
+    Node* right;
 };
-void print_tree(Branch* aBranch,int tabs)
+void print_tree(Node* btree,int tabs)
 {
 
-    if (!aBranch) return;
+    if (!btree) return;
     tabs+=5;
-    print_tree(aBranch->LeftBranch,tabs);
+    print_tree(btree->left,tabs);
     for (int i = 0; i < tabs; i++) std::cout << " ";
-    std::cout << aBranch->Data << std::endl;
-    print_tree(aBranch->RightBranch,tabs);
+    std::cout << btree->key_value << std::endl;
+    print_tree(btree->right,tabs);
     tabs -= 5;
     return;
 }
-void add_elem_from_tree(int aData, Branch*& aBranch)
+void add_element_from_tree(int aData, Node*& btree)
 {
-    if (!aBranch)
+    if (!btree)
     {
-        aBranch = new Branch;
-        aBranch->Data = aData;
-        aBranch->LeftBranch = NULL;
-        aBranch->RightBranch = NULL;
+        btree = new Node;
+        btree->key_value = aData;
+        btree->left = NULL;
+        btree->right = NULL;
         return;
     }
     else
     {
-        if (aData < aBranch->Data)
+        if (aData < btree->key_value)
         {
-            add_elem_from_tree(aData, aBranch->LeftBranch);
+            add_element_from_tree(aData, btree->left);
         }
-        else if (aData > aBranch->Data)
+        else if (aData > btree->key_value)
         {
-            add_elem_from_tree(aData, aBranch->RightBranch);
+            add_element_from_tree(aData, btree->right);
         }
     }
 }
-void is_tree_empty(Branch*& aBranch)
+Node*& is_tree_empty(Node*& btree)
 {
-    if (!aBranch)
+    if (!btree)
     {
         std::cout << "The tree is empty" << std::endl;
+        std::exit;
     }
     else
     {
         std::cout << "The tree is not empty" << std::endl;
+        return btree;
     }
 }
-int search_tree_keys_min(Branch*& aBranch)
+int search_tree_keys_min(Node*& btree)
 {
-    if (aBranch->LeftBranch != NULL) {
-        return search_tree_keys_min(aBranch->LeftBranch);
+    if (btree->left != NULL) {
+        return search_tree_keys_min(btree->left);
     }
     else {
-        return aBranch->Data;
+        return btree->key_value;
     }
 }
-int search_tree_keys_max(Branch*& aBranch)
+int search_tree_keys_max(Node*& btree)
 {
-    if (aBranch->RightBranch != NULL) {
-        return search_tree_keys_max(aBranch->RightBranch);
+    if (btree->right != NULL) {
+        return search_tree_keys_max(btree->right);
     }
     else {
-        return aBranch->Data;
+        return btree->key_value;
     }
 }
-int switch_tree_keys_max(Branch*& aBranch,int max, int min)
+int switch_tree_keys_max(Node*& btree,int maxkey, int minkey)
 {
-    if (aBranch->Data == max)
+    if (btree->key_value == maxkey)
     {
-        aBranch->Data = min; 
+        btree->key_value = minkey; 
         return 0;
     }
-    switch_tree_keys_max(aBranch->RightBranch, max, min);
+    switch_tree_keys_max(btree->right, maxkey, minkey);
 }
-int switch_tree_keys_min(Branch*& aBranch, int max, int min)
+int switch_tree_keys_min(Node*& btree, int maxkey, int minkey)
 {
-    if (aBranch->Data == min)
+    if (btree->key_value == minkey)
     {
-        aBranch->Data = max; 
+        btree->key_value = maxkey; 
         return 0;
     }
-    switch_tree_keys_min(aBranch->LeftBranch, max, min);
+    switch_tree_keys_min(btree->left, maxkey, minkey);
 }
-void delete_tree(Branch* aBranch)
+void destroy_tree(Node* btree)
 {
-    if (!aBranch) return;
-    delete_tree(aBranch->LeftBranch);
-    delete_tree(aBranch->RightBranch);
+    if (!btree) return;
+    destroy_tree(btree->left);
+    destroy_tree(btree->right);
 }
-void input_user()
+void dialog_with_the_user()
 {
     int tabs = 0;
     int amount, number;
-    Branch* tree = 0;
+    Node* tree = NULL;
     std::cout << "Input amount: ";
     std::cin >> amount;
     for (int i = 0; i < amount;i++)
     {
         std::cin >> number;
-        add_elem_from_tree(number,tree);
+        add_element_from_tree(number,tree);
     }
     is_tree_empty(tree);
     print_tree(tree, tabs);
-    int min = search_tree_keys_min(tree);
-    int max = search_tree_keys_max(tree);
-    switch_tree_keys_max(tree, max, min);
-    switch_tree_keys_min(tree, max, min);
+    int minkey = search_tree_keys_min(tree);
+    int maxkey = search_tree_keys_max(tree);
+    switch_tree_keys_max(tree, maxkey, minkey);
+    switch_tree_keys_min(tree, maxkey, minkey);
     std::cout << "-----------------\n";
     print_tree(tree, tabs);
-    delete_tree(tree);
+    destroy_tree(tree);
 }
 int main()
 {
-    input_user();
+    dialog_with_the_user();
 }
