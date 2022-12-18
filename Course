@@ -6,14 +6,17 @@
 #include <Windows.h>
 #pragma warning (disable : 4996)
 
-void read_information(long double start, long double end, long double delta, long double accuracy);
-void read_information_from_console(long double start, long double end, long double delta, long double accuracy);
-void read_information_from_file(long double start, long double end, long double delta, long double accuracy);
-bool examination(long double start, long double end, long double delta, long double accuracy);
-void create_table(long double Xbegin, long double Xend, long double Xdelta, long double accuracy);
-void write_information_from_file(long double x, long double seriesX, long double functionX, size_t steps);
+void read_information(long double&, long double&, long double&, long double&);
+void read_information_from_file(long double&, long double&, long double&, long double&);
+void read_information_from_console(long double&, long double&, long double&, long double&);
+bool examination(long double, long double, long double, long double);
 
-void read_information(long double start, long double end, long double delta, long double accuracy)
+void create_table(long double, long double, long double, long double);
+
+void write_information_from_file(long double, long double, long double, size_t);
+
+
+void read_information(long double& start, long double& end, long double& delta, long double& accuracy)
 {
 	int select = 0;
 	while (select < 1 || select >2)
@@ -22,16 +25,16 @@ void read_information(long double start, long double end, long double delta, lon
 		std::cin >> select;
 		system("cls");
 	}
-	while (!examination(start, end, delta, accuracy))
+	do
 	{
 		if (select == 1)
 			read_information_from_file(start, end, delta, accuracy);
 		else
 			read_information_from_console(start, end, delta, accuracy);
 		system("cls");
-	}
+	} while (examination(start, end, delta, accuracy) == false);
 }
-void read_information_from_console(long double start, long double end, long double delta, long double accuracy)
+void read_information_from_console(long double& start, long double& end, long double& delta, long double& accuracy)
 {
 	std::cout << "Enter start : ";
 	std::cin >> start;
@@ -56,72 +59,84 @@ bool examination(long double start, long double end, long double delta, long dou
 	return true;
 
 }
-void read_information_from_file(long double start, long double end, long double delta, long double accuracy)
+void read_information_from_file(long double& start, long double& end, long double& delta, long double& accuracy)
 {
 	FILE* file;
 	char filename[200];
 	std::cout << "Enter filename : ";
 	std::cin >> filename;
 	file = fopen(filename, "r");
-	fscanf(file, "%lf %lf %lf %lf %lf", start, end, delta, accuracy, accuracy);
+	if (filename != NULL)
+	{
+		fscanf(file, "%lf %lf %lf %lf", &start, &end, &delta, &accuracy);
+	}
+	else
+		std::cout << "Invalid file\n";
+	
 }
-double recors()
-{
 
-}
-void create_table(long double Xbegin, long double Xend,long double Xdelta, long double accuracy)
+//double recors(double a, double x, double accuracy, int n, double ans)
+//{
+// 
+//}
+void create_table(long double Xbegin, long double Xend, long double Xdelta, long double accuracy)
 {
-	std::cout << "---------------------------------------------------" << std::endl;
-	std::cout << " x |   series(x)|   y(x)   | absolute error|  steps" << std::endl;
-	std::cout << "---------------------------------------------------" << std::endl;
+	std::cout << "----------------------------------------------------------------------" << std::endl;
+	std::cout << "|   x   |   series(x)   |    y(x)    |   absolute error   |   steps  |" << std::endl;
+	std::cout << "----------------------------------------------------------------------" << std::endl;
 	size_t steps = 1;
 	for (Xbegin; Xbegin <= Xend; Xbegin += Xdelta)
 	{
 		steps = 1;
 		long double functionX = asin(Xbegin);
-		long double seriesX = recors();
-		std::cout << '|' << std::setprecision(3)
-			<< std::setw(8) << Xbegin;
+		long double seriesX = 2;
 
-		std::cout << '|' << std::setprecision(5)
-			<< std::setw(13) << seriesX;
 
-		std::cout << '|' << std::setprecision(5)
-			<< std::setw(13) << functionX;
+		std::cout << '|' << std::setprecision(2) << std::setw(7) << Xbegin;
 
-		std::cout << '|' << std::setprecision(7)
-			<< std::setw(18) << abs(seriesX - functionX);
+		std::cout << '|' << std::setprecision(5) << std::setw(15) << seriesX;
 
-		std::cout << '|' << std::setprecision(5)
-			<< std::setw(9) << steps << '|' << std::endl;
+		std::cout << '|' << std::setprecision(5) << std::setw(12) << functionX;
 
-		std::cout << "---------------------------------------" << "----------------------------\n";
-		
+		std::cout << '|' << std::setprecision(7) << std::setw(20) << abs(seriesX - functionX);
+
+		std::cout << '|' << std::setprecision(5) << std::setw(10) << steps << '|' << std::endl;
+
+		std::cout << "----------------------------------------------------------------------" << std::endl;
+
 		write_information_from_file(Xbegin, seriesX, functionX, steps);
 	}
 }
-void write_information_from_file(long double x, long double seriesX, long double functionX, size_t steps)
+void write_information_from_file(long double Xbegin, long double seriesX, long double functionX, size_t steps)
 {
-
-	FILE* fileWrite = fopen("DATA.txt", "wt");
-	if (fileWrite != NULL)
+	static bool count = 1;
+	if (count == 1)
 	{
-		fprintf(fileWrite, "x,series(x),F(x),absolute error,steps\n");
-
-		fprintf(fileWrite, "%.5lf,%.18lf,%.18lf,%.18lf,%u\n", x, seriesX, functionX, abs(seriesX - functionX), steps);
-
-		if (fclose(fileWrite) == EOF)
-			std::cout << "File was not closed!\n";
+		FILE* fileWrite = fopen("output.txt", "wt");
+		if (fileWrite != NULL)
+		{
+			fprintf(fileWrite, "x,series(x),F(x),absolute error,steps\n");
+			fprintf(fileWrite, "%.5lf,%.18lf,%.18lf,%.18lf,%u\n", Xbegin, seriesX, functionX, abs(seriesX - functionX), steps);
+			if (fclose(fileWrite) == EOF) std::cout << "File was not closed!\n";
+		}
+		count = 0;
 	}
-}
-double recursion(double a, double x, double accuracy, int& n, double ans) {
-
+	else
+	{
+		FILE* fileWrite = fopen("output.txt", "a+t");
+		if (fileWrite != NULL)
+		{
+			fprintf(fileWrite, "%.5lf,%.18lf,%.18lf,%.18lf,%u\n", Xbegin, seriesX, functionX, abs(seriesX - functionX), steps);
+			if (fclose(fileWrite) == EOF) std::cout << "File was not closed!\n";
+		}	
+	}
 }
 int main()
 {
 	system("color 03");
 	long double Xbegin(0), Xend(0), Xdelta(0), accuracy(0);
 	read_information(Xbegin, Xend, Xdelta, accuracy);
+	create_table(Xbegin, Xend, Xdelta, accuracy);
+
 	return 0;
 }
-
