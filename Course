@@ -66,13 +66,10 @@ void read_information_from_file(long double& start, long double& end, long doubl
 	std::cout << "Enter filename : ";
 	std::cin >> filename;
 	file = fopen(filename, "r");
-	if (filename != NULL)
+	if (file != NULL)
 	{
 		fscanf(file, "%lf %lf %lf %lf", &start, &end, &delta, &accuracy);
 	}
-	else
-		std::cout << "Invalid file\n";
-	
 }
 
 //double recors(double a, double x, double accuracy, int n, double ans)
