@@ -59,6 +59,17 @@ bool examination(long double start, long double end, long double delta, long dou
 	return true;
 
 }
+long double x_series(long double x, long double accuracy, long double current, size_t& n)
+{
+	if (abs(current) >= accuracy)
+	{
+		long double q = (pow((2*n+1),2)*pow(x,2))/(2*(n+1)*(2*n+3));
+		++n;
+		return current + x_series(x, accuracy, current * q, n);
+	}
+	else
+		return 0;
+}
 void read_information_from_file(long double& start, long double& end, long double& delta, long double& accuracy)
 {
 	FILE* file;
@@ -72,10 +83,7 @@ void read_information_from_file(long double& start, long double& end, long doubl
 	}
 }
 
-//double recors(double a, double x, double accuracy, int n, double ans)
-//{
-// 
-//}
+
 void create_table(long double Xbegin, long double Xend, long double Xdelta, long double accuracy)
 {
 	std::cout << "----------------------------------------------------------------------" << std::endl;
@@ -86,7 +94,7 @@ void create_table(long double Xbegin, long double Xend, long double Xdelta, long
 	{
 		steps = 1;
 		long double functionX = asin(Xbegin);
-		long double seriesX = 2;
+		long double seriesX = x_series(Xbegin, accuracy,Xbegin, steps);
 
 
 		std::cout << '|' << std::setprecision(2) << std::setw(7) << Xbegin;
