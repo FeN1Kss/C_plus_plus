@@ -1,0 +1,67 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+#include <cstdio>
+#include <conio.h>
+#include <Windows.h>
+#pragma warning (disable : 4996)
+
+void read_information(long double start, long double end, long double delta, long double accuracy)
+{
+	int select = 0;
+	while (select < 1 || select >2)
+	{
+		std::cout << "Select an action:\n1 - Read information from file\n2 - Read information from console\nAction: ";
+		std::cin >> select;
+		system("cls");
+	}
+	while (!examination(start, end, delta, accuracy))
+	{
+		if (select == 1)
+			read_information_from_file(start, end, delta, accuracy);
+		else
+			read_information_from_console(start, end, delta, accuracy);
+	}
+}
+void read_information_from_console(long double start, long double end, long double delta, long double accuracy)
+{
+	std::cout << "Enter start : ";
+	std::cin >> start;
+
+	std::cout << "Enter end : ";
+	std::cin >> end;
+
+	std::cout << "Enter delta : ";
+	std::cin >> delta;
+
+	std::cout << "Enter accuracy : ";
+	std::cin >> accuracy;
+
+}
+
+bool examination(long double start, long double end, long double delta, long double accuracy)
+{
+	if (end < start) return false;
+	else if (delta < 0) return false;
+	else if (end == start && delta != 0) return false;
+	else if (accuracy <= 0 || accuracy >= 1) return false;
+	return true;
+
+}
+void read_information_from_file(long double start, long double end, long double delta, long double accuracy)
+{
+	FILE* file;
+	char filename[200];
+	std::cout << "Enter filename : ";
+	std::cin >> filename;
+	file = fopen(filename, "r");
+	fscanf(file, "%lf %lf %lf %lf %lf", start, end, delta, accuracy, accuracy);
+}
+
+
+int main()
+{
+	system("color 03");
+
+}
+
