@@ -17,7 +17,7 @@ void write_information_from_file(long double, long double, long double, size_t);
 
 /*
 * Функція, яка визивається на початку програми для того, щоб користувач вибрав звідки зчитувати інформацію
-* 1 - з файлу 
+* 1 - з файлу
 * 2 - з консолі
 * Далі за допомогою циклу і функції examination перевіряються вхідні данні
 */
@@ -72,19 +72,19 @@ bool examination(long double start, long double end, long double delta, long dou
 /*
 * Рекурсивна функція котра обраховує n-ний член ряду.
 */
-long double x_series(long double x, long double accuracy, long double current, size_t& n)
+long double x_series(long double x, long double accuracy, long double current, int& n)
 {
-	if (abs(current) >= accuracy)
+	long double q = (pow((2 * n + 1), 2) * pow(x, 2)) / (2 * (n + 1) * (2 * n + 3));
+	if (abs(current) <= accuracy)
 	{
-		long double q = (pow((2 * n + 1), 2) * pow(x, 2)) / (2 * (n + 1) * (2 * n + 3));
-		++n;
-		return current + x_series(x, accuracy, current * q, n);
-	}
-	else
 		return 0;
+	}
+	n++;
+	return current + x_series(x, accuracy, current * q, n);
+	
 }
 /*
-* Функція котра котра зчитує інформацію з файлу з назвою якою ввів користувач, якщо файлу не буде, то
+* Функція котра зчитує інформацію з файлу з назвою якою ввів користувач, якщо файлу не буде, то
 * функція буде ще раз визиватися.
 */
 void read_information_from_file(long double& start, long double& end, long double& delta, long double& accuracy)
@@ -108,10 +108,9 @@ void create_table(long double Xbegin, long double Xend, long double Xdelta, long
 	std::cout << "----------------------------------------------------------------------" << std::endl;
 	std::cout << "|   x   |   series(x)   |    y(x)    |   absolute error   |   steps  |" << std::endl;
 	std::cout << "----------------------------------------------------------------------" << std::endl;
-	size_t steps = 1;
+	int steps = 0;
 	for (; Xbegin <= Xend; Xbegin += Xdelta)
 	{
-		steps = 1;
 		long double functionX = asin(Xbegin);
 		long double seriesX = x_series(Xbegin, accuracy, Xbegin, steps);
 
