@@ -13,7 +13,7 @@ bool examination(long double, long double, long double, long double);
 
 void create_table(long double, long double, long double, long double);
 
-void write_information_from_file(long double, long double, long double, size_t);
+void write_information_from_file(long double, long double, long double, int);
 
 /*
 * Функція, яка визивається на початку програми для того, щоб користувач вибрав звідки зчитувати інформацію
@@ -75,13 +75,13 @@ bool examination(long double start, long double end, long double delta, long dou
 long double x_series(long double x, long double accuracy, long double current, int& n)
 {
 	long double q = (pow((2 * n + 1), 2) * pow(x, 2)) / (2 * (n + 1) * (2 * n + 3));
-	if (abs(current) <= accuracy)
+	if (abs(pow(x, 2 * n + 1) / (1 - x * x)) <= accuracy)
 	{
-		return 0;
+		return current;
 	}
 	n++;
 	return current + x_series(x, accuracy, current * q, n);
-	
+
 }
 /*
 * Функція котра зчитує інформацію з файлу з назвою якою ввів користувач, якщо файлу не буде, то
@@ -108,10 +108,10 @@ void create_table(long double Xbegin, long double Xend, long double Xdelta, long
 	std::cout << "----------------------------------------------------------------------" << std::endl;
 	std::cout << "|   x   |   series(x)   |    y(x)    |   absolute error   |   steps  |" << std::endl;
 	std::cout << "----------------------------------------------------------------------" << std::endl;
-	int steps = 0;
 	for (; Xbegin <= Xend; Xbegin += Xdelta)
 	{
 		long double functionX = asin(Xbegin);
+		int steps = 0;
 		long double seriesX = x_series(Xbegin, accuracy, Xbegin, steps);
 
 
@@ -134,7 +134,7 @@ void create_table(long double Xbegin, long double Xend, long double Xdelta, long
 * Функція на початку її роботи записує до файлу назви стовпчиків і перший рядок значень,
 * після чого бульова функція змінює своє значення з true на false і продовжує записувати до файлу тільки значення
 */
-void write_information_from_file(long double Xbegin, long double seriesX, long double functionX, size_t steps)
+void write_information_from_file(long double Xbegin, long double seriesX, long double functionX, int steps)
 {
 	static bool count = 1;
 	if (count == 1)
